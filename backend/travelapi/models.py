@@ -19,6 +19,13 @@ class Destinations(Base):
     name = Column(String, index=True)
     created_at = Column(DateTime, default=datetime.now)
 
+    def to_dict(self) -> dict[str, object]:
+        return {
+            "id": self.id,
+            "name": self.name,
+            "created_at": self.created_at,
+        }
+
 class KnowledgeBase(Base):
     __tablename__ = "knowledge_base"
     id = Column(Integer, primary_key=True, index=True)
