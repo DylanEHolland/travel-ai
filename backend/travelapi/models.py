@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 from dotenv import load_dotenv
 import os
 from datetime import datetime
-
+from pgvector.sqlalchemy import Vector
 load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL")
@@ -12,7 +12,6 @@ engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
-# Define a model
 class Destinations(Base):
     __tablename__ = "destinations"
 
@@ -25,6 +24,7 @@ class KnowledgeBase(Base):
     id = Column(Integer, primary_key=True, index=True)
     destination_id = Column(Integer, ForeignKey("destinations.id"))
     content = Column(String, index=True)
+    embedding = Column(Vector(1536))
     created_at = Column(DateTime, default=datetime.now)
 
 
