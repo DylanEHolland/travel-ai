@@ -3,6 +3,8 @@ import { connectToBackend } from "../helpers/requests";
 import { useForm } from "react-hook-form";
 import { Destination, NewDestination } from "@/types/destination";
 import Link from "next/link";
+import { useDestination } from "../hooks/useDestination";
+import { KnowledgeBase } from "./KnowledgeBase";
 
 export const Destinations = () => {
   const { data: destinations, refetch } = useQuery({
@@ -54,5 +56,21 @@ export const NewDestinationForm = ({ refetch }: { refetch: () => void }) => {
       <input {...register("name")} placeholder="Add new destination" />
       <button type="submit">Save</button>
     </form>
+  );
+};
+
+export const DestinationDetails = ({
+  destinationId,
+}: {
+  destinationId: string;
+}) => {
+  const destination = useDestination(destinationId);
+  return (
+    <div>
+      <div>{destination?.name}</div>
+      <hr />
+      <br />
+      <KnowledgeBase destinationId={destinationId} />
+    </div>
   );
 };

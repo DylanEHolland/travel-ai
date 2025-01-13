@@ -34,6 +34,14 @@ class KnowledgeBase(Base):
     embedding = Column(Vector(1536))
     created_at = Column(DateTime, default=datetime.now)
 
+    def to_dict(self) -> dict[str, object]:
+        return {
+            "id": self.id,
+            "destination_id": self.destination_id,
+            "content": self.content,
+            "created_at": self.created_at,
+        }
+
 
 # Create the database tables
 Base.metadata.create_all(bind=engine)
