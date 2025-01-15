@@ -1,9 +1,9 @@
 export interface KnowledgeBaseItem {
   id: string;
-  content: string;
+  text: string;
   destinationId: string;
 }
 
 export interface NewKnowledgeBaseItem {
-  content: string;
+  text: string;
 }

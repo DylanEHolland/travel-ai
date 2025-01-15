@@ -3,16 +3,9 @@ from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 
-from .helpers import create_embeddings
+from .helpers import create_embeddings, runAugmentedChat, save_to_knowledge_base
 from .models import KnowledgeBase, SessionLocal, Destinations
 app = FastAPI()
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 app.add_middleware(
     CORSMiddleware,
@@ -57,16 +50,16 @@ def read_knowledgebase(destination_id: str, db: Session = Depends(get_db)) -> di
 
 @app.post("/knowledgebase")
 def create_knowledgebase_item(knowledgebase_item: dict[object, object], db: Session = Depends(get_db)) -> dict[object, object]:
-    embeddings = create_embeddings(knowledgebase_item["content"])
-    # print(embeddings)
-    new_knowledgebase_item: KnowledgeBase = KnowledgeBase(content=knowledgebase_item["content"], destination_id=knowledgebase_item["destinationId"], embedding=embeddings)
-
-    db.add(new_knowledgebase_item)
-    db.commit()
-    db.refresh(new_knowledgebase_item) 
-
+    new_knowledgebase_item = save_to_knowledge_base(db, knowledgebase_item["destinationId"], knowledgebase_item["content"])
     return {
-        "id": "test" #new_knowledgebase_item.id,
+        "id": new_knowledgebase_item.id,
+    }
+
+@app.post("/chat")
+def chat(chat_message: dict[object, object], db: Session = Depends(get_db)) -> dict[object, object]:
+    response = runAugmentedChat(chat_message['message'])
+    return {
+        "response": response["response"]
     }
 
 if __name__ == "__main__":

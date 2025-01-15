@@ -17,7 +17,7 @@ export const KnowledgeBase = ({ destinationId }: { destinationId: string }) => {
       />
       <div>
         {data.knowledgebase.map((item: KnowledgeBaseItem) => (
-          <div key={item.id}>{item.content}</div>
+          <div key={item.id}>{item.text}</div>
         ))}
       </div>
     </div>

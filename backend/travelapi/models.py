@@ -12,6 +12,13 @@ engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
 class Destinations(Base):
     __tablename__ = "destinations"
 
@@ -30,15 +37,15 @@ class KnowledgeBase(Base):
     __tablename__ = "knowledge_base"
     id = Column(Integer, primary_key=True, index=True)
     destination_id = Column(Integer, ForeignKey("destinations.id"))
-    content = Column(String, index=True)
-    embedding = Column(Vector(1536))
+    text = Column(String, index=True)
+    vector = Column(Vector(1536))
     created_at = Column(DateTime, default=datetime.now)
 
     def to_dict(self) -> dict[str, object]:
         return {
             "id": self.id,
             "destination_id": self.destination_id,
-            "content": self.content,
+            "text": self.text,
             "created_at": self.created_at,
         }
 
