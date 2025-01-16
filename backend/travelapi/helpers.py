@@ -78,6 +78,8 @@ def runAugmentedChat(message: str) -> str | None:
         openai_api_key=os.getenv("OPENAI_API_KEY")
     )
 
+    retriever_chain = RetrievalQA.from_chain_type(llm=llm, retriever=retriever)
+
     weather = OpenWeatherMapAPIWrapper(openweathermap_api_key=os.getenv("OPENWEATHERMAP_API_KEY"))
     weather_tool = Tool(
         name="Weather",
@@ -85,8 +87,13 @@ def runAugmentedChat(message: str) -> str | None:
         description="Useful for getting weather information for a specific location."
     )
 
-    # chain = RetrievalQA.from_chain_type(llm=llm, retriever=retriever)
-    agent = initialize_agent([weather_tool], llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True)
+    retrieval_tool = Tool(
+        name="Knowledge Base",
+        func=retriever_chain.run,
+        description="Useful for answering questions about specific topics using the knowledge base. Input should be a question."
+    )
+
+    agent = initialize_agent([weather_tool, retrieval_tool], llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True)
     prompt = ChatPromptTemplate.from_template("Answer this question: {question}")
     input_data = {"question": message}  
     formatted_prompt = prompt.format(**input_data)
@@ -103,4 +110,4 @@ def runAugmentedChat(message: str) -> str | None:
 if __name__ == "__main__":
     db = next(get_db())
     # save_to_knowledge_base(db, "1", "Want to see the Eiffel Tower")
-    runAugmentedChat("Whats the weather in Paris?")
+    runAugmentedChat("What's something to do and whats the weather like in Paris?")
