@@ -3,6 +3,8 @@ import { useForm } from "react-hook-form";
 import { connectToBackend } from "../helpers/requests";
 import { useMutation } from "@tanstack/react-query";
 import { useKnowledgeBase } from "../hooks/useKnowledgeBase";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
 
 export const KnowledgeBase = ({ destinationId }: { destinationId: string }) => {
   const { data, isLoading, refetch } = useKnowledgeBase(destinationId);
@@ -55,13 +57,13 @@ export const CreateKnowledgeBaseItem = ({
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div>
-        <textarea
+        <Textarea
           {...register("content")}
           placeholder="Add more content"
           style={{ width: "500px", height: "100px" }}
         />
       </div>
-      <button type="submit">Save</button>
+      <Button type="submit">Save</Button>
     </form>
   );
 };

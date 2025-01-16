@@ -5,6 +5,8 @@ import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { connectToBackend } from "../helpers/requests";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 
 export const ChatWindow = () => {
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
@@ -66,7 +68,7 @@ export const ChatInput = ({
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div>
-        <textarea
+        <Textarea
           {...register("message")}
           style={{
             width: "500px",
@@ -77,7 +79,7 @@ export const ChatInput = ({
           }}
         />
       </div>
-      <button type="submit">Send</button>
+      <Button type="submit">Send</Button>
     </form>
   );
 };

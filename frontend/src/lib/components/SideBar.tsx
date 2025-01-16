@@ -1,5 +1,6 @@
 import {
   Sidebar,
+  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -22,6 +23,7 @@ const items = [
 export const AppSideBar = () => {
   return (
     <Sidebar>
+      <SidebarHeader>Awesome Travel AI</SidebarHeader>
       <SidebarMenu>
         {items.map((item) => (
           <SidebarMenuItem key={item.title}>
