@@ -5,6 +5,8 @@ import { Destination, NewDestination } from "@/types/destination";
 import Link from "next/link";
 import { useDestination } from "../hooks/useDestination";
 import { KnowledgeBase } from "./KnowledgeBase";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 export const Destinations = () => {
   const { data: destinations, refetch } = useQuery({
@@ -53,8 +55,10 @@ export const NewDestinationForm = ({ refetch }: { refetch: () => void }) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <input {...register("name")} placeholder="Add new destination" />
-      <button type="submit">Save</button>
+      <div className="flex flex-row gap-2">
+        <Input {...register("name")} placeholder="Add new destination" />
+        <Button type="submit">Save</Button>
+      </div>
     </form>
   );
 };
