@@ -9,3 +9,5 @@ openai
 langchain_community
 langchain_postgres
 tiktoken
+pyowm
+setuptools

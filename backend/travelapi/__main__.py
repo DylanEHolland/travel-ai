@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 
 from .helpers import create_embeddings, runAugmentedChat, save_to_knowledge_base
-from .models import KnowledgeBase, SessionLocal, Destinations
+from .models import KnowledgeBase, SessionLocal, Destinations, get_db
 app = FastAPI()
 
 app.add_middleware(

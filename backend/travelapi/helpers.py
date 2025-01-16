@@ -12,6 +12,9 @@ from langchain_community.embeddings import OpenAIEmbeddings
 from sqlalchemy import text
 from langchain.chains import RetrievalQA
 from sqlalchemy.orm import Session
+from langchain_community.utilities import OpenWeatherMapAPIWrapper
+from langchain.tools import Tool
+from langchain.agents import initialize_agent, AgentType
 
 from .models import get_db
 
@@ -59,6 +62,7 @@ def create_embeddings(content: str) -> str | None:
         return None
     return "embeddings"
 
+#https://bugbytes.io/posts/retrieval-augmented-generation-with-langchain-and-pgvector/
 def runAugmentedChat(message: str) -> str | None:
     embeddings = embeddings_client()
     vector_store = PGVector(
@@ -68,15 +72,28 @@ def runAugmentedChat(message: str) -> str | None:
     )
 
     retriever = vector_store.as_retriever(k=3)
-    
     llm = ChatOpenAI(
         model="gpt-4",  # Choose the model (e.g., 'gpt-3.5-turbo' or 'gpt-4')
         temperature=0.7,
         openai_api_key=os.getenv("OPENAI_API_KEY")
     )
 
-    chain = RetrievalQA.from_chain_type(llm=llm, retriever=retriever)
-    response = chain.run(message)
+    weather = OpenWeatherMapAPIWrapper(openweathermap_api_key=os.getenv("OPENWEATHERMAP_API_KEY"))
+    weather_tool = Tool(
+        name="Weather",
+        func=weather.run,
+        description="Useful for getting weather information for a specific location."
+    )
+
+    # chain = RetrievalQA.from_chain_type(llm=llm, retriever=retriever)
+    agent = initialize_agent([weather_tool], llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True)
+    prompt = ChatPromptTemplate.from_template("Answer this question: {question}")
+    input_data = {"question": message}  
+    formatted_prompt = prompt.format(**input_data)
+    # response = chain.run(formatted_prompt)
+    response = agent.run(formatted_prompt)
+
+    print("got response:", response)
 
 
     return {
@@ -86,4 +103,4 @@ def runAugmentedChat(message: str) -> str | None:
 if __name__ == "__main__":
     db = next(get_db())
     # save_to_knowledge_base(db, "1", "Want to see the Eiffel Tower")
-    runAugmentedChat("Whats a good place to visit?")
+    runAugmentedChat("Whats the weather in Paris?")
