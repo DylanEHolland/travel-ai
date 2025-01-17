@@ -15,48 +15,49 @@ For the weather api there's a really simply `pyowm` module I was able to use and
 
 ### Considerations
 
-    *   Due to limited time I didn't do extensive handling of inputs, needed to get something out rather than polish
+- Due to limited time I didn't do extensive handling of inputs, needed to get something out rather than polish
 
-    *   The weather api can be finicky, if I ask for the weather in some other place that doesn't exist it will error
+- The weather api can be finicky, if I ask for the weather in some other place that doesn't exist it will error
 
 ### Potential Next Steps
 
-    *   Use something like auth0 or firebase to add a user system
+- Use something like auth0 or firebase to add a user system
 
-    *   Improve RAG utilizing some other module (didn't have a lot of time to deep dive) or some better supported vector database
+- Improve RAG utilizing some other module (didn't have a lot of time to deep dive) or some better supported vector database
 
-    *   Add a thin wrapper around the weather module to ensure it never errors or at least we catch the errors and say we don't know the weather when it does
+- Add a thin wrapper around the weather module to ensure it never errors or at least we catch the errors and say we don't know the weather when it does
 
-    *   Add deletion of destinations, deletion and editing of knowledge base
+- Add deletion of destinations, deletion and editing of knowledge base
 
-    *   Get destinations from e.g. google maps api instead of manually entering
+- Get destinations from e.g. google maps api instead of manually entering
 
-    *   Improve design
+- Improve design
 
 ## Setup
 
 ### Backend
 
-    *   Setup DB
-        *   Run docker compose `docker-compose up -d`
+- Setup DB
 
-        *   Install pg-vector `psql $DATABASE_URL -f setup.sql`
+  - Run docker compose `docker-compose up -d`
 
-    *   Setup Environment
+  - Install pg-vector `psql $DATABASE_URL -f setup.sql`
 
-        *   Setup env `python3 -m venv environment`
+- Setup Environment
 
-        *   Install requirements `pip3 install -r requirements.txt`
+  - Setup env `python3 -m venv environment`
 
-    *   Copy `env.example` to `.env` in the `backend` directory and fill in
+  - Install requirements `pip3 install -r requirements.txt`
 
-    *   Run
-        *   Run `bash run.sh` (will run a hot-reloading server)
+- Copy `env.example` to `.env` in the `backend` directory and fill in
+
+- Run
+  - Run `bash run.sh` (will run a hot-reloading server)
 
 ### Frontend
 
-    *   Install deps `yarn install`
+- Install deps `yarn install`
 
-    *   Copy `env.example` to `.env` in the `frontend` directory and fill in
+- Copy `env.example` to `.env` in the `frontend` directory and fill in
 
-    *   Run `yarn dev`
+- Run `yarn dev`
