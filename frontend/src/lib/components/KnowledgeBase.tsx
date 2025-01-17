@@ -17,9 +17,16 @@ export const KnowledgeBase = ({ destinationId }: { destinationId: string }) => {
         destinationId={destinationId}
         refetch={refetch}
       />
+      <br />
       <div>
         {data.knowledgebase.map((item: KnowledgeBaseItem) => (
-          <div key={item.id}>{item.text}</div>
+          <div
+            key={item.id}
+            className="border border-gray-300 rounded-md p-2"
+            style={{ marginBottom: "12px" }}
+          >
+            {item.text}
+          </div>
         ))}
       </div>
     </div>

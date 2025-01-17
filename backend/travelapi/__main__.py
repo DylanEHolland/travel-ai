@@ -57,7 +57,8 @@ def create_knowledgebase_item(knowledgebase_item: dict[object, object], db: Sess
 
 @app.post("/chat")
 def chat(chat_message: dict[object, object], db: Session = Depends(get_db)) -> dict[object, object]:
-    response = runAugmentedChat(chat_message['message'])
+    print("got here")
+    response = runAugmentedChat(chat_message['message'], chat_message['destinationId'])
     return {
         "response": response["response"]
     }

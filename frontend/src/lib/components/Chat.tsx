@@ -8,7 +8,9 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
-export const ChatWindow = () => {
+export const ChatWindow: React.FC<{ destinationId: string }> = ({
+  destinationId,
+}) => {
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
 
   return (
@@ -16,6 +18,7 @@ export const ChatWindow = () => {
       <ChatHistory chatHistory={chatHistory} />
       <ChatInput
         pushResponse={(response) => setChatHistory([...chatHistory, response])}
+        destinationId={destinationId}
       />
     </div>
   );
@@ -39,8 +42,10 @@ export const ChatHistory = ({
 
 export const ChatInput = ({
   pushResponse,
+  destinationId,
 }: {
   pushResponse: (response: ChatMessage) => void;
+  destinationId: string;
 }) => {
   const { register, handleSubmit } = useForm<ChatMessage>();
 
@@ -48,6 +53,7 @@ export const ChatInput = ({
     mutationFn: (data: ChatMessage) => {
       return connectToBackend("/chat", "POST", {
         message: data.message,
+        destinationId,
       });
     },
     onMutate: () => {},

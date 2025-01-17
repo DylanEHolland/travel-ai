@@ -1,4 +1,5 @@
 import os
+from typing import Optional
 from langchain_core.documents.base import Document
 from langchain_core.messages import HumanMessage
 from langchain_core.retrievers import BaseRetriever
@@ -65,7 +66,7 @@ def create_embeddings(content: str) -> list[float] | None:
         print(f"Error generating embedding: {e}")
         return None
 
-def naive_similarity_search(query: str, top_k=3):
+def naive_similarity_search(destinationId: str, query: str, top_k=3):
     embeddings = embeddings_client()
     query_emb = embeddings.embed_query(query)
     query_emb_str = "ARRAY[" + ",".join(str(x) for x in query_emb) + "]::vector"
@@ -74,7 +75,7 @@ def naive_similarity_search(query: str, top_k=3):
     print("query_emb_str:", len(query_emb))
     print("engine:", engine)
     with engine.connect() as conn:
-        result = conn.execute(text(f"SELECT text, vector, vector_dims(vector) from knowledge_base ORDER BY vector <-> {query_emb_str} LIMIT {top_k}"))
+        result = conn.execute(text(f"SELECT text, vector, vector_dims(vector) from knowledge_base where destination_id = {destinationId} ORDER BY vector <-> {query_emb_str} LIMIT 3"))
         # result = conn.execute(text(f"select current_database(), current_schema()"))
         docs = [Document(page_content=row[0]) for row in result.fetchall()]
         conn.close()
@@ -82,14 +83,18 @@ def naive_similarity_search(query: str, top_k=3):
         return docs
 
 class CustomRetriever(BaseRetriever):
+    destinationId: Optional[str] = None
+    def setDestinationId(self, destinationId: str):
+        self.destinationId = destinationId
+
     def get_relevant_documents(self, query: str):
-        return naive_similarity_search(query)
+        return naive_similarity_search(self.destinationId, query)
 
     async def aget_relevant_documents(self, query: str):
         return self.get_relevant_documents(query)
 
 #https://bugbytes.io/posts/retrieval-augmented-generation-with-langchain-and-pgvector/
-def runAugmentedChat(message: str) -> str | None:
+def runAugmentedChat(message: str, destinationId: str) -> str | None:
     embeddings = embeddings_client()
     llm = ChatOpenAI(
         model="gpt-4",  # Choose the model (e.g., 'gpt-3.5-turbo' or 'gpt-4')
@@ -97,7 +102,10 @@ def runAugmentedChat(message: str) -> str | None:
         openai_api_key=os.getenv("OPENAI_API_KEY")
     )
 
-    retriever_chain = RetrievalQA.from_chain_type(llm=llm, retriever=CustomRetriever())
+    custom_retriever = CustomRetriever()
+    custom_retriever.setDestinationId(destinationId)
+
+    retriever_chain = RetrievalQA.from_chain_type(llm=llm, retriever=custom_retriever)
 
     
     weather = OpenWeatherMapAPIWrapper(openweathermap_api_key=os.getenv("OPENWEATHERMAP_API_KEY"))

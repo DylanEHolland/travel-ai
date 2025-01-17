@@ -74,6 +74,11 @@ export const DestinationDetails = ({
       <div>{destination?.name}</div>
       <hr />
       <br />
+      <Link href={`/destinations/${destinationId}/chat`}>
+        <Button>Chat</Button>
+      </Link>
+      <br />
+      <br />
       <KnowledgeBase destinationId={destinationId} />
     </div>
   );
