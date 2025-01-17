@@ -86,7 +86,6 @@ class CustomRetriever(BaseRetriever):
     async def aget_relevant_documents(self, query: str):
         return self.get_relevant_documents(query)
 
-#https://bugbytes.io/posts/retrieval-augmented-generation-with-langchain-and-pgvector/
 def runAugmentedChat(message: str, destinationId: str) -> str | None:
     embeddings = embeddings_client()
     llm = ChatOpenAI(
