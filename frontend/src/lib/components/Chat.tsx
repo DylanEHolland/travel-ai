@@ -33,8 +33,11 @@ export const ChatHistory = ({
   return (
     <div>
       {chatHistory.map((message, index) => {
-        console.log(message);
-        return <div key={index}>{message}</div>;
+        return (
+          <div key={index} className="bg-gray-100 p-2 rounded-md">
+            {message}
+          </div>
+        );
       })}
     </div>
   );

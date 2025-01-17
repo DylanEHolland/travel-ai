@@ -1,32 +1,25 @@
 import os
 from typing import Optional
 from langchain_core.documents.base import Document
-from langchain_core.messages import HumanMessage
 from langchain_core.retrievers import BaseRetriever
 from openai import OpenAI
-from openai.types.create_embedding_response import CreateEmbeddingResponse
 from dotenv import load_dotenv
 # from langchain.chat_models import ChatOpenAI
 from langchain_community.chat_models import ChatOpenAI
 from langchain.prompts import ChatPromptTemplate
-from langchain_postgres import PGVector
 # from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain_community.embeddings import OpenAIEmbeddings
-from sqlalchemy import Text, text
+from sqlalchemy import text
 from langchain.chains import RetrievalQA
 from sqlalchemy.orm import Session
 from langchain_community.utilities import OpenWeatherMapAPIWrapper
 from langchain.tools import Tool
 from langchain.agents import initialize_agent, AgentType
 
-from .retrievers import CustomPGVector
-
 from .models import get_db
 
 # from .retrievers import SQLVectorRetriever
 from .models import KnowledgeBase, engine
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-import numpy as np
 load_dotenv()
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))

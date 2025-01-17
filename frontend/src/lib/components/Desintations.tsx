@@ -1,3 +1,5 @@
+"use client";
+
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { connectToBackend } from "../helpers/requests";
 import { useForm } from "react-hook-form";
@@ -19,12 +21,18 @@ export const Destinations = () => {
 
   return (
     <div>
+      <span className="text-2xl font-bold">Destinations</span>
+      <br />
+      <br />
       <NewDestinationForm refetch={refetch} />
       <br />
       <ol>
         {destinations?.map((destination: Destination) => (
           <li key={destination.id}>
-            <Link href={`/destinations/${destination.id}`}>
+            <Link
+              href={`/destinations/${destination.id}`}
+              className="text-blue-500 hover:underline border border-gray-300 rounded-md p-2"
+            >
               {destination.name}
             </Link>
           </li>

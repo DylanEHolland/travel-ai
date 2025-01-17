@@ -13,11 +13,11 @@ const items = [
     url: "/",
     icon: Home,
   },
-  {
-    title: "Chat",
-    url: "/chat",
-    icon: MessageCircle,
-  },
+  // {
+  //   title: "Chat",
+  //   url: "/chat",
+  //   icon: MessageCircle,
+  // },
 ];
 
 export const AppSideBar = () => {
